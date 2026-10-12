@@ -1,0 +1,351 @@
+LABSHEET 6
+Data Structure I (BTCS209P) - Queue Lab Exercises
+Language: C++
+
+Each exercise is a separate C++ program. Copy one program at a time into VS Code.
+Based on the uploaded Lab Sheet-06.
+
+============================================================
+1. QUEUE USING ARRAY: ENQUEUE, DEQUEUE, PEEK, DISPLAY
+============================================================
+#include <iostream>
+using namespace std;
+const int MAX = 5;
+class Queue {
+    int q[MAX], front, rear;
+public:
+    Queue() : front(-1), rear(-1) {}
+    void enqueue(int x) {
+        if (rear == MAX - 1) { cout << "Queue Overflow\n"; return; }
+        if (front == -1) front = 0;
+        q[++rear] = x;
+        cout << x << " inserted\n";
+    }
+    void dequeue() {
+        if (front == -1) { cout << "Queue Underflow\n"; return; }
+        cout << q[front++] << " deleted\n";
+        if (front > rear) front = rear = -1;
+    }
+    void peek() {
+        if (front == -1) cout << "Queue is Empty\n";
+        else cout << "Front element: " << q[front] << "\n";
+    }
+    void display() {
+        if (front == -1) { cout << "Queue is Empty\n"; return; }
+        for (int i = front; i <= rear; i++) cout << q[i] << " ";
+        cout << "\n";
+    }
+};
+int main() {
+    Queue q;
+    q.enqueue(10); q.enqueue(20); q.enqueue(30);
+    q.display(); q.peek(); q.dequeue(); q.display();
+    return 0;
+}
+// Output: 10 inserted; 20 inserted; 30 inserted; 10 20 30;
+// Front element: 10; 10 deleted; 20 30
+// Enqueue/Dequeue/Peek: O(1); Display: O(n); Space: O(MAX)
+
+============================================================
+2. ENQUEUE: INSERT AT THE REAR
+============================================================
+#include <iostream>
+using namespace std;
+int main() {
+    int q[5], front = -1, rear = -1, value = 25;
+    if (rear == 4) cout << "Queue Overflow\n";
+    else {
+        if (front == -1) front = 0;
+        q[++rear] = value;
+        cout << value << " inserted at Rear\n";
+    }
+    return 0;
+}
+// Output: 25 inserted at Rear
+// Time: O(1); Space: O(1) auxiliary
+
+============================================================
+3. DEQUEUE: DELETE FROM THE FRONT
+============================================================
+#include <iostream>
+using namespace std;
+int main() {
+    int q[5] = {10, 20, 30}, front = 0, rear = 2;
+    if (front == -1 || front > rear) cout << "Queue Underflow\n";
+    else {
+        cout << q[front] << " deleted from Front\n";
+        front++;
+    }
+    return 0;
+}
+// Output: 10 deleted from Front
+// Time: O(1); Space: O(1)
+
+============================================================
+4. PEEK: DISPLAY THE FRONT ELEMENT
+============================================================
+#include <iostream>
+using namespace std;
+int main() {
+    int q[5] = {10, 20, 30}, front = 0;
+    cout << "Front element: " << q[front] << "\n";
+    return 0;
+}
+// Output: Front element: 10
+// Time: O(1); Space: O(1)
+
+============================================================
+5. DISPLAY QUEUE FROM FRONT TO REAR
+============================================================
+#include <iostream>
+using namespace std;
+int main() {
+    int q[5] = {10, 20, 30}, front = 0, rear = 2;
+    cout << "Queue: ";
+    for (int i = front; i <= rear; i++) cout << q[i] << " ";
+    cout << "\n";
+    return 0;
+}
+// Output: Queue: 10 20 30
+// Time: O(n); Space: O(1) auxiliary
+
+============================================================
+6. DEMONSTRATE QUEUE OVERFLOW
+============================================================
+#include <iostream>
+using namespace std;
+int main() {
+    const int MAX = 3;
+    int q[MAX], front = -1, rear = -1;
+    for (int x = 10; x <= 40; x += 10) {
+        if (rear == MAX - 1) cout << "Queue Overflow while inserting " << x << "\n";
+        else {
+            if (front == -1) front = 0;
+            q[++rear] = x;
+        }
+    }
+    return 0;
+}
+// Output: Queue Overflow while inserting 40
+// Time: O(1) per enqueue; Space: O(MAX)
+
+============================================================
+7. DEMONSTRATE QUEUE UNDERFLOW
+============================================================
+#include <iostream>
+using namespace std;
+int main() {
+    int q[5], front = -1, rear = -1;
+    if (front == -1 || front > rear) cout << "Queue Underflow: queue is empty\n";
+    return 0;
+}
+// Output: Queue Underflow: queue is empty
+// Time: O(1); Space: O(1)
+
+============================================================
+8. MENU-DRIVEN QUEUE
+============================================================
+#include <iostream>
+using namespace std;
+int main() {
+    const int MAX = 5;
+    int q[MAX], front = -1, rear = -1, ch, x;
+    do {
+        cout << "\n1.Enqueue 2.Dequeue 3.Peek 4.Display 5.Exit\nChoice: ";
+        cin >> ch;
+        if (ch == 1) {
+            cout << "Value: "; cin >> x;
+            if (rear == MAX - 1) cout << "Queue Overflow\n";
+            else {
+                if (front == -1) front = 0;
+                q[++rear] = x;
+            }
+        } else if (ch == 2) {
+            if (front == -1) cout << "Queue Underflow\n";
+            else {
+                cout << q[front++] << " deleted\n";
+                if (front > rear) front = rear = -1;
+            }
+        } else if (ch == 3) {
+            if (front == -1) cout << "Queue is Empty\n";
+            else cout << "Front element: " << q[front] << "\n";
+        } else if (ch == 4) {
+            if (front == -1) cout << "Queue is Empty\n";
+            else {
+                for (int i = front; i <= rear; i++) cout << q[i] << " ";
+                cout << "\n";
+            }
+        } else if (ch != 5) cout << "Invalid choice\n";
+    } while (ch != 5);
+    return 0;
+}
+// Enqueue/Dequeue/Peek: O(1); Display: O(n); Space: O(MAX)
+
+============================================================
+9. COUNT QUEUE ELEMENTS
+============================================================
+#include <iostream>
+using namespace std;
+int main() {
+    int q[5] = {10, 20, 30}, front = 0, rear = 2;
+    int count = (front == -1) ? 0 : rear - front + 1;
+    cout << "Number of elements: " << count << "\n";
+    return 0;
+}
+// Output: Number of elements: 3
+// Time: O(1); Space: O(1)
+
+============================================================
+10. SEARCH FOR AN ELEMENT IN A QUEUE
+============================================================
+#include <iostream>
+using namespace std;
+int main() {
+    int q[5] = {10, 20, 30}, front = 0, rear = 2, key = 20;
+    int pos = -1;
+    for (int i = front; i <= rear; i++)
+        if (q[i] == key) { pos = i - front + 1; break; }
+    if (pos != -1) cout << "Found at position " << pos << "\n";
+    else cout << "Not found\n";
+    return 0;
+}
+// Output: Found at position 2
+// Time: O(n); Space: O(1)
+
+============================================================
+11. FIND MAXIMUM AND MINIMUM IN A QUEUE
+============================================================
+#include <iostream>
+using namespace std;
+int main() {
+    int q[5] = {10, 5, 30}, front = 0, rear = 2;
+    int mx = q[front], mn = q[front];
+    for (int i = front + 1; i <= rear; i++) {
+        if (q[i] > mx) mx = q[i];
+        if (q[i] < mn) mn = q[i];
+    }
+    cout << "Maximum = " << mx << "\nMinimum = " << mn << "\n";
+    return 0;
+}
+// Output: Maximum = 30; Minimum = 5
+// Time: O(n); Space: O(1)
+
+============================================================
+12. REVERSE QUEUE ELEMENTS
+============================================================
+#include <iostream>
+using namespace std;
+int main() {
+    int q[5] = {10, 20, 30}, n = 3, st[5], top = -1;
+    for (int i = 0; i < n; i++) st[++top] = q[i];
+    cout << "Reversed queue: ";
+    while (top >= 0) cout << st[top--] << " ";
+    cout << "\n";
+    return 0;
+}
+// Output: Reversed queue: 30 20 10
+// Time: O(n); Extra space: O(n)
+
+============================================================
+13. CIRCULAR QUEUE USING ARRAY
+============================================================
+#include <iostream>
+using namespace std;
+class CircularQueue {
+    static const int MAX = 5;
+    int q[MAX], front, rear;
+public:
+    CircularQueue() : front(-1), rear(-1) {}
+    void enqueue(int x) {
+        if ((rear + 1) % MAX == front) { cout << "Queue Overflow\n"; return; }
+        if (front == -1) front = rear = 0;
+        else rear = (rear + 1) % MAX;
+        q[rear] = x;
+    }
+    void dequeue() {
+        if (front == -1) { cout << "Queue Underflow\n"; return; }
+        cout << q[front] << " deleted\n";
+        if (front == rear) front = rear = -1;
+        else front = (front + 1) % MAX;
+    }
+    void display() {
+        if (front == -1) { cout << "Queue is Empty\n"; return; }
+        int i = front;
+        do {
+            cout << q[i] << " ";
+            i = (i + 1) % MAX;
+        } while (i != (rear + 1) % MAX);
+        cout << "\n";
+    }
+};
+int main() {
+    CircularQueue q;
+    q.enqueue(10); q.enqueue(20); q.enqueue(30);
+    q.display(); q.dequeue(); q.display();
+    return 0;
+}
+// Output: 10 20 30; 10 deleted; 20 30
+// Enqueue/Dequeue: O(1); Display: O(n); Space: O(MAX)
+
+============================================================
+14. QUEUE USING LINKED LIST
+============================================================
+#include <iostream>
+using namespace std;
+struct Node { int data; Node* next; };
+class Queue {
+    Node *front, *rear;
+public:
+    Queue() : front(nullptr), rear(nullptr) {}
+    void enqueue(int x) {
+        Node* n = new Node{x, nullptr};
+        if (!rear) front = rear = n;
+        else { rear->next = n; rear = n; }
+    }
+    void dequeue() {
+        if (!front) { cout << "Queue Underflow\n"; return; }
+        Node* t = front;
+        cout << t->data << " deleted\n";
+        front = front->next;
+        if (!front) rear = nullptr;
+        delete t;
+    }
+    void display() {
+        if (!front) { cout << "Queue is Empty\n"; return; }
+        for (Node* t = front; t; t = t->next) cout << t->data << " ";
+        cout << "\n";
+    }
+    ~Queue() {
+        while (front) { Node* t = front; front = front->next; delete t; }
+    }
+};
+int main() {
+    Queue q;
+    q.enqueue(10); q.enqueue(20); q.enqueue(30);
+    q.display(); q.dequeue(); q.display();
+    return 0;
+}
+// Output: 10 20 30; 10 deleted; 20 30
+// Enqueue/Dequeue: O(1); Display: O(n); Space: O(n)
+
+============================================================
+15. LINEAR QUEUE VS CIRCULAR QUEUE
+============================================================
+#include <iostream>
+using namespace std;
+int main() {
+    cout << "Linear Queue:\n";
+    cout << "- Simple array implementation.\n";
+    cout << "- May waste freed positions after dequeue.\n";
+    cout << "- Enqueue and dequeue are O(1).\n\n";
+    cout << "Circular Queue:\n";
+    cout << "- Reuses freed positions by wrapping around.\n";
+    cout << "- Better space utilization in a fixed-size array.\n";
+    cout << "- Enqueue and dequeue are O(1).\n";
+    return 0;
+}
+// Space: O(MAX) for both; circular queue uses array capacity more efficiently.
+
+============================================================
+END OF LABSHEET 6
+============================================================

@@ -1,0 +1,382 @@
+LABSHEET 5
+Data Structure I (BTCS209P) - Stack Lab Exercises
+Language: C++
+
+Each exercise is a separate C++ program. Copy one program at a time into VS Code.
+The exercises follow the uploaded Lab Sheet-05, pages 5-6.
+
+============================================================
+1. STACK USING ARRAY: PUSH, POP, PEEK, DISPLAY
+============================================================
+#include <iostream>
+using namespace std;
+const int MAX = 5;
+int st[MAX], top = -1;
+
+void push(int x) {
+    if (top == MAX - 1) cout << "Stack Overflow\n";
+    else st[++top] = x;
+}
+void pop() {
+    if (top == -1) cout << "Stack Underflow\n";
+    else cout << st[top--] << " popped\n";
+}
+void peek() {
+    if (top == -1) cout << "Stack is Empty\n";
+    else cout << "Top element = " << st[top] << "\n";
+}
+void display() {
+    if (top == -1) { cout << "Stack is Empty\n"; return; }
+    for (int i = top; i >= 0; i--) cout << st[i] << " ";
+    cout << "\n";
+}
+int main() {
+    push(10); push(20); push(30);
+    display(); peek(); pop(); display();
+    return 0;
+}
+// Output: 30 20 10; Top element = 30; 30 popped; 20 10
+// Push/Pop/Peek: O(1); Display: O(n); Space: O(MAX)
+
+============================================================
+2. DEMONSTRATE STACK OVERFLOW
+============================================================
+#include <iostream>
+using namespace std;
+int main() {
+    const int MAX = 3;
+    int st[MAX], top = -1;
+    for (int x = 10; x <= 40; x += 10) {
+        if (top == MAX - 1) cout << "Stack Overflow while pushing " << x << "\n";
+        else st[++top] = x;
+    }
+    return 0;
+}
+// Output: Stack Overflow while pushing 40
+// Time: O(1) per push; Space: O(MAX)
+
+============================================================
+3. DEMONSTRATE STACK UNDERFLOW
+============================================================
+#include <iostream>
+using namespace std;
+int main() {
+    int st[3], top = -1;
+    if (top == -1) cout << "Stack Underflow: stack is empty\n";
+    else top--;
+    return 0;
+}
+// Output: Stack Underflow: stack is empty
+// Time: O(1); Space: O(1)
+
+============================================================
+4. DISPLAY TOP ELEMENT USING PEEK
+============================================================
+#include <iostream>
+using namespace std;
+int main() {
+    int st[5] = {10, 20, 30};
+    int top = 2;
+    if (top == -1) cout << "Stack is Empty\n";
+    else cout << "Top element = " << st[top] << "\n";
+    return 0;
+}
+// Output: Top element = 30
+// Time: O(1); Space: O(1)
+
+============================================================
+5. MENU-DRIVEN STACK
+============================================================
+#include <iostream>
+using namespace std;
+int main() {
+    const int MAX = 5;
+    int st[MAX], top = -1, ch, x;
+    do {
+        cout << "\n1.Push 2.Pop 3.Peek 4.Display 5.Exit\nChoice: ";
+        cin >> ch;
+        if (ch == 1) {
+            cout << "Value: "; cin >> x;
+            if (top == MAX - 1) cout << "Stack Overflow\n";
+            else st[++top] = x;
+        } else if (ch == 2) {
+            if (top == -1) cout << "Stack Underflow\n";
+            else cout << st[top--] << " popped\n";
+        } else if (ch == 3) {
+            if (top == -1) cout << "Stack is Empty\n";
+            else cout << "Top = " << st[top] << "\n";
+        } else if (ch == 4) {
+            if (top == -1) cout << "Stack is Empty\n";
+            else { for (int i = top; i >= 0; i--) cout << st[i] << " "; cout << "\n"; }
+        } else if (ch != 5) cout << "Invalid choice\n";
+    } while (ch != 5);
+    return 0;
+}
+// Push/Pop/Peek: O(1); Display: O(n); Space: O(MAX)
+
+============================================================
+6. STACK OF INTEGERS USING ARRAY
+============================================================
+#include <iostream>
+using namespace std;
+int main() {
+    int st[5], top = -1;
+    int values[] = {5, 10, 15, 20};
+    for (int x : values) {
+        if (top < 4) st[++top] = x;
+    }
+    cout << "Stack (top to bottom): ";
+    for (int i = top; i >= 0; i--) cout << st[i] << " ";
+    cout << "\n";
+    return 0;
+}
+// Output: Stack (top to bottom): 20 15 10 5
+// Time: O(n); Space: O(MAX)
+
+============================================================
+7. REVERSE A STRING USING STACK
+============================================================
+#include <iostream>
+#include <string>
+using namespace std;
+int main() {
+    string s = "HELLO";
+    char st[100];
+    int top = -1;
+    for (char c : s) st[++top] = c;
+    cout << "Reversed: ";
+    while (top >= 0) cout << st[top--];
+    cout << "\n";
+    return 0;
+}
+// Output: Reversed: OLLEH
+// Time: O(n); Space: O(n)
+
+============================================================
+8. CHECK BALANCED PARENTHESES USING STACK
+============================================================
+#include <iostream>
+#include <string>
+using namespace std;
+int main() {
+    string s = "{[()]}";
+    char st[100];
+    int top = -1;
+    bool ok = true;
+    for (char c : s) {
+        if (c == '(' || c == '[' || c == '{') st[++top] = c;
+        else if (c == ')' || c == ']' || c == '}') {
+            if (top == -1) { ok = false; break; }
+            char open = st[top--];
+            if ((c == ')' && open != '(') ||
+                (c == ']' && open != '[') ||
+                (c == '}' && open != '{')) { ok = false; break; }
+        }
+    }
+    if (top != -1) ok = false;
+    cout << (ok ? "Balanced\n" : "Not Balanced\n");
+    return 0;
+}
+// Output: Balanced
+// Time: O(n); Space: O(n)
+
+============================================================
+9. CONVERT INFIX EXPRESSION TO POSTFIX
+============================================================
+#include <iostream>
+#include <stack>
+#include <string>
+#include <cctype>
+using namespace std;
+int prec(char c) {
+    if (c == '^') return 3;
+    if (c == '*' || c == '/') return 2;
+    if (c == '+' || c == '-') return 1;
+    return 0;
+}
+int main() {
+    string in = "A+B*C", out;
+    stack<char> ops;
+    for (char c : in) {
+        if (isalnum((unsigned char)c)) out += c;
+        else {
+            while (!ops.empty() && prec(ops.top()) >= prec(c))
+                { out += ops.top(); ops.pop(); }
+            ops.push(c);
+        }
+    }
+    while (!ops.empty()) { out += ops.top(); ops.pop(); }
+    cout << "Postfix: " << out << "\n";
+    return 0;
+}
+// Output: Postfix: ABC*+
+// Time: O(n); Space: O(n)
+
+============================================================
+10. EVALUATE A POSTFIX EXPRESSION
+============================================================
+#include <iostream>
+#include <stack>
+#include <string>
+#include <cctype>
+using namespace std;
+int main() {
+    string exp = "23*54*+9-";
+    stack<int> st;
+    for (char c : exp) {
+        if (isdigit((unsigned char)c)) st.push(c - '0');
+        else {
+            int b = st.top(); st.pop();
+            int a = st.top(); st.pop();
+            if (c == '+') st.push(a + b);
+            else if (c == '-') st.push(a - b);
+            else if (c == '*') st.push(a * b);
+            else if (c == '/') st.push(a / b);
+        }
+    }
+    cout << "Result = " << st.top() << "\n";
+    return 0;
+}
+// Output: Result = 17
+// Time: O(n); Space: O(n)
+// Note: This sample handles single-digit operands and +, -, *, /.
+
+============================================================
+11. CONVERT INFIX EXPRESSION TO PREFIX
+============================================================
+#include <iostream>
+#include <stack>
+#include <string>
+#include <algorithm>
+#include <cctype>
+using namespace std;
+int prec(char c) {
+    if (c == '^') return 3;
+    if (c == '*' || c == '/') return 2;
+    if (c == '+' || c == '-') return 1;
+    return 0;
+}
+int main() {
+    string infix = "A+B*C";
+    string rev = infix, postfix, prefix;
+    reverse(rev.begin(), rev.end());
+    for (char &c : rev) {
+        if (c == '(') c = ')';
+        else if (c == ')') c = '(';
+    }
+    stack<char> ops;
+    for (char c : rev) {
+        if (isalnum((unsigned char)c)) postfix += c;
+        else if (c == '(') ops.push(c);
+        else if (c == ')') {
+            while (!ops.empty() && ops.top() != '(') {
+                postfix += ops.top(); ops.pop();
+            }
+            if (!ops.empty()) ops.pop();
+        } else {
+            while (!ops.empty() && ops.top() != '(' && prec(ops.top()) > prec(c)) {
+                postfix += ops.top(); ops.pop();
+            }
+            ops.push(c);
+        }
+    }
+    while (!ops.empty()) { postfix += ops.top(); ops.pop(); }
+    reverse(postfix.begin(), postfix.end());
+    cout << "Prefix: " << postfix << "\n";
+    return 0;
+}
+// Output: Prefix: +A*BC
+// Time: O(n); Space: O(n)
+
+============================================================
+12. TWO STACKS IN A SINGLE ARRAY
+============================================================
+#include <iostream>
+using namespace std;
+int main() {
+    const int N = 10;
+    int a[N], top1 = -1, top2 = N;
+    // Push 10 into Stack 1 and 90 into Stack 2
+    if (top1 + 1 < top2) a[++top1] = 10;
+    if (top1 + 1 < top2) a[--top2] = 90;
+    cout << "Stack 1 top = " << a[top1] << "\n";
+    cout << "Stack 2 top = " << a[top2] << "\n";
+    return 0;
+}
+// Output: Stack 1 top = 10; Stack 2 top = 90
+// Push/Pop: O(1); Space: O(N)
+
+============================================================
+13. IMPLEMENT STACK USING A CLASS
+============================================================
+#include <iostream>
+using namespace std;
+class Stack {
+    int a[5], top;
+public:
+    Stack() : top(-1) {}
+    void push(int x) {
+        if (top == 4) cout << "Stack Overflow\n";
+        else a[++top] = x;
+    }
+    void pop() {
+        if (top == -1) cout << "Stack Underflow\n";
+        else cout << a[top--] << " popped\n";
+    }
+    void peek() {
+        if (top == -1) cout << "Stack is Empty\n";
+        else cout << "Top = " << a[top] << "\n";
+    }
+    void display() {
+        if (top == -1) cout << "Stack is Empty\n";
+        else { for (int i = top; i >= 0; i--) cout << a[i] << " "; cout << "\n"; }
+    }
+};
+int main() {
+    Stack s;
+    s.push(10); s.push(20); s.push(30);
+    s.display(); s.peek(); s.pop();
+    return 0;
+}
+// Output: 30 20 10; Top = 30; 30 popped
+// Push/Pop/Peek: O(1); Display: O(n)
+
+============================================================
+14. DEMONSTRATE STACK USE IN RECURSION
+============================================================
+#include <iostream>
+using namespace std;
+void countDown(int n) {
+    if (n == 0) return;
+    cout << n << " ";
+    countDown(n - 1);
+}
+int main() {
+    countDown(5);
+    cout << "\n";
+    return 0;
+}
+// Output: 5 4 3 2 1
+// Time: O(n); Call-stack space: O(n)
+
+============================================================
+15. ANALYZE STACK OPERATION TIME COMPLEXITY
+============================================================
+#include <iostream>
+using namespace std;
+int main() {
+    cout << "Push: O(1)\n";
+    cout << "Pop: O(1)\n";
+    cout << "Peek: O(1)\n";
+    cout << "Display: O(n)\n";
+    return 0;
+}
+// Output:
+// Push: O(1)
+// Pop: O(1)
+// Peek: O(1)
+// Display: O(n)
+
+============================================================
+END OF LABSHEET 5
+============================================================

@@ -1,0 +1,402 @@
+LABSHEET 4
+Data Structure I - Linked List Lab Exercises
+Language: C++
+
+Each exercise below is a separate C++ program. Copy one program at a time into VS Code and run it.
+
+============================================================
+1. CREATE AND DISPLAY A SINGLY LINKED LIST
+============================================================
+#include <iostream>
+using namespace std;
+struct Node { int data; Node* next; };
+int main() {
+    Node* head = new Node{10, nullptr};
+    head->next = new Node{20, nullptr};
+    head->next->next = new Node{30, nullptr};
+
+    for (Node* t = head; t; t = t->next)
+        cout << t->data << " -> ";
+    cout << "NULL\n";
+
+    while (head) {
+        Node* t = head;
+        head = head->next;
+        delete t;
+    }
+    return 0;
+}
+// Output: 10 -> 20 -> 30 -> NULL
+// Time: O(n), Extra space: O(n)
+
+============================================================
+2. INSERT A NODE AT THE BEGINNING
+============================================================
+#include <iostream>
+using namespace std;
+struct Node { int data; Node* next; };
+int main() {
+    Node* head = new Node{20, nullptr};
+    head->next = new Node{30, nullptr};
+
+    head = new Node{10, head};
+    for (Node* t = head; t; t = t->next) cout << t->data << " ";
+    cout << "\n";
+
+    while (head) { Node* t = head; head = head->next; delete t; }
+    return 0;
+}
+// Output: 10 20 30
+// Time: O(1), Extra space: O(1)
+
+============================================================
+3. INSERT A NODE AT THE END
+============================================================
+#include <iostream>
+using namespace std;
+struct Node { int data; Node* next; };
+int main() {
+    Node* head = new Node{10, nullptr};
+    head->next = new Node{20, nullptr};
+
+    Node* n = new Node{30, nullptr};
+    Node* t = head;
+    while (t->next) t = t->next;
+    t->next = n;
+
+    for (t = head; t; t = t->next) cout << t->data << " ";
+    cout << "\n";
+    while (head) { t = head; head = head->next; delete t; }
+    return 0;
+}
+// Output: 10 20 30
+// Time: O(n), Extra space: O(1)
+
+============================================================
+4. INSERT A NODE AT A GIVEN POSITION (1-BASED)
+============================================================
+#include <iostream>
+using namespace std;
+struct Node { int data; Node* next; };
+int main() {
+    Node* head = new Node{10, nullptr};
+    head->next = new Node{30, nullptr};
+    int value = 20, position = 2;
+
+    if (position == 1) head = new Node{value, head};
+    else {
+        Node* t = head;
+        for (int i = 1; t && i < position - 1; i++) t = t->next;
+        if (t) t->next = new Node{value, t->next};
+        else cout << "Invalid position\n";
+    }
+
+    for (Node* t = head; t; t = t->next) cout << t->data << " ";
+    cout << "\n";
+    while (head) { Node* t = head; head = head->next; delete t; }
+    return 0;
+}
+// Output: 10 20 30
+// Time: O(n), Extra space: O(1)
+
+============================================================
+5. DELETE A NODE FROM THE BEGINNING
+============================================================
+#include <iostream>
+using namespace std;
+struct Node { int data; Node* next; };
+int main() {
+    Node* head = new Node{10, nullptr};
+    head->next = new Node{20, nullptr};
+
+    if (head) {
+        Node* t = head;
+        head = head->next;
+        delete t;
+    }
+    for (Node* t = head; t; t = t->next) cout << t->data << " ";
+    cout << "\n";
+    while (head) { Node* t = head; head = head->next; delete t; }
+    return 0;
+}
+// Output: 20
+// Time: O(1), Extra space: O(1)
+
+============================================================
+6. DELETE A NODE FROM THE END
+============================================================
+#include <iostream>
+using namespace std;
+struct Node { int data; Node* next; };
+int main() {
+    Node* head = new Node{10, nullptr};
+    head->next = new Node{20, nullptr};
+
+    if (!head) cout << "List is empty\n";
+    else if (!head->next) { delete head; head = nullptr; }
+    else {
+        Node* t = head;
+        while (t->next->next) t = t->next;
+        delete t->next;
+        t->next = nullptr;
+    }
+
+    for (Node* t = head; t; t = t->next) cout << t->data << " ";
+    cout << "\n";
+    while (head) { Node* t = head; head = head->next; delete t; }
+    return 0;
+}
+// Output: 10
+// Time: O(n), Extra space: O(1)
+
+============================================================
+7. DELETE A NODE FROM A GIVEN POSITION (1-BASED)
+============================================================
+#include <iostream>
+using namespace std;
+struct Node { int data; Node* next; };
+int main() {
+    Node* head = new Node{10, nullptr};
+    head->next = new Node{20, nullptr};
+    head->next->next = new Node{30, nullptr};
+    int position = 2;
+
+    if (position == 1 && head) {
+        Node* d = head; head = head->next; delete d;
+    } else {
+        Node* t = head;
+        for (int i = 1; t && i < position - 1; i++) t = t->next;
+        if (t && t->next) {
+            Node* d = t->next;
+            t->next = d->next;
+            delete d;
+        } else cout << "Invalid position\n";
+    }
+
+    for (Node* t = head; t; t = t->next) cout << t->data << " ";
+    cout << "\n";
+    while (head) { Node* t = head; head = head->next; delete t; }
+    return 0;
+}
+// Output: 10 30
+// Time: O(n), Extra space: O(1)
+
+============================================================
+8. SEARCH FOR AN ELEMENT
+============================================================
+#include <iostream>
+using namespace std;
+struct Node { int data; Node* next; };
+int main() {
+    Node* head = new Node{10, nullptr};
+    head->next = new Node{20, nullptr};
+    head->next->next = new Node{30, nullptr};
+    int key = 20, position = 1;
+    Node* t = head;
+
+    while (t && t->data != key) { t = t->next; position++; }
+    if (t) cout << "Found at position " << position << "\n";
+    else cout << "Not found\n";
+
+    while (head) { t = head; head = head->next; delete t; }
+    return 0;
+}
+// Output: Found at position 2
+// Time: O(n), Extra space: O(1)
+
+============================================================
+9. COUNT THE TOTAL NUMBER OF NODES
+============================================================
+#include <iostream>
+using namespace std;
+struct Node { int data; Node* next; };
+int main() {
+    Node* head = new Node{10, nullptr};
+    head->next = new Node{20, nullptr};
+    head->next->next = new Node{30, nullptr};
+    int count = 0;
+    for (Node* t = head; t; t = t->next) count++;
+    cout << "Total nodes = " << count << "\n";
+
+    while (head) { Node* t = head; head = head->next; delete t; }
+    return 0;
+}
+// Output: Total nodes = 3
+// Time: O(n), Extra space: O(1)
+
+============================================================
+10. FIND MAXIMUM AND MINIMUM ELEMENTS
+============================================================
+#include <iostream>
+using namespace std;
+struct Node { int data; Node* next; };
+int main() {
+    Node* head = new Node{10, nullptr};
+    head->next = new Node{5, nullptr};
+    head->next->next = new Node{30, nullptr};
+    int mx = head->data, mn = head->data;
+
+    for (Node* t = head; t; t = t->next) {
+        if (t->data > mx) mx = t->data;
+        if (t->data < mn) mn = t->data;
+    }
+    cout << "Maximum = " << mx << "\nMinimum = " << mn << "\n";
+
+    while (head) { Node* t = head; head = head->next; delete t; }
+    return 0;
+}
+// Output: Maximum = 30; Minimum = 5
+// Time: O(n), Extra space: O(1)
+
+============================================================
+11. REVERSE A SINGLY LINKED LIST
+============================================================
+#include <iostream>
+using namespace std;
+struct Node { int data; Node* next; };
+int main() {
+    Node* head = new Node{10, nullptr};
+    head->next = new Node{20, nullptr};
+    head->next->next = new Node{30, nullptr};
+    Node *prev = nullptr, *cur = head, *next = nullptr;
+
+    while (cur) {
+        next = cur->next;
+        cur->next = prev;
+        prev = cur;
+        cur = next;
+    }
+    head = prev;
+    for (Node* t = head; t; t = t->next) cout << t->data << " ";
+    cout << "\n";
+
+    while (head) { Node* t = head; head = head->next; delete t; }
+    return 0;
+}
+// Output: 30 20 10
+// Time: O(n), Extra space: O(1)
+
+============================================================
+12. SORT A LINKED LIST IN ASCENDING ORDER
+============================================================
+#include <iostream>
+using namespace std;
+struct Node { int data; Node* next; };
+int main() {
+    Node* head = new Node{30, nullptr};
+    head->next = new Node{10, nullptr};
+    head->next->next = new Node{20, nullptr};
+
+    for (Node* i = head; i; i = i->next)
+        for (Node* j = i->next; j; j = j->next)
+            if (i->data > j->data) {
+                int temp = i->data; i->data = j->data; j->data = temp;
+            }
+
+    for (Node* t = head; t; t = t->next) cout << t->data << " ";
+    cout << "\n";
+    while (head) { Node* t = head; head = head->next; delete t; }
+    return 0;
+}
+// Output: 10 20 30
+// Time: O(n^2), Extra space: O(1)
+
+============================================================
+13. MENU-DRIVEN LINKED LIST: INSERT, DELETE, SEARCH, DISPLAY
+============================================================
+#include <iostream>
+using namespace std;
+struct Node { int data; Node* next; };
+int main() {
+    Node* head = nullptr;
+    int choice, value;
+    do {
+        cout << "\n1.Insert at beginning  2.Delete beginning  3.Search  4.Display  5.Exit\n";
+        cout << "Choice: ";
+        cin >> choice;
+        if (choice == 1) {
+            cout << "Value: "; cin >> value;
+            head = new Node{value, head};
+        } else if (choice == 2) {
+            if (!head) cout << "List is empty\n";
+            else { Node* t = head; head = head->next; delete t; }
+        } else if (choice == 3) {
+            cout << "Value to search: "; cin >> value;
+            Node* t = head;
+            while (t && t->data != value) t = t->next;
+            cout << (t ? "Found\n" : "Not found\n");
+        } else if (choice == 4) {
+            if (!head) cout << "List is empty\n";
+            for (Node* t = head; t; t = t->next) cout << t->data << " ";
+            cout << "\n";
+        } else if (choice != 5) cout << "Invalid choice\n";
+    } while (choice != 5);
+
+    while (head) { Node* t = head; head = head->next; delete t; }
+    return 0;
+}
+// Insert: O(1); Search/Display: O(n); Extra list space: O(n)
+
+============================================================
+14. DOUBLY LINKED LIST: INSERTION AND DELETION
+============================================================
+#include <iostream>
+using namespace std;
+struct Node { int data; Node *prev, *next; };
+int main() {
+    Node* a = new Node{10, nullptr, nullptr};
+    Node* b = new Node{20, a, nullptr};
+    a->next = b;
+
+    // Insert 15 between 10 and 20
+    Node* c = new Node{15, a, b};
+    a->next = c;
+    b->prev = c;
+
+    // Delete node 15
+    a->next = b;
+    b->prev = a;
+    delete c;
+
+    for (Node* t = a; t; t = t->next) cout << t->data << " ";
+    cout << "\n";
+    delete a;
+    delete b;
+    return 0;
+}
+// Output: 10 20
+// Insertion/deletion with known node: O(1); traversal: O(n)
+
+============================================================
+15. CIRCULAR LINKED LIST: TRAVERSAL AND INSERTION
+============================================================
+#include <iostream>
+using namespace std;
+struct Node { int data; Node* next; };
+int main() {
+    Node* a = new Node{10, nullptr};
+    Node* b = new Node{20, a};
+    a->next = b;
+
+    // Insert 30 before returning to the first node
+    Node* c = new Node{30, a};
+    b->next = c;
+
+    Node* t = a;
+    do {
+        cout << t->data << " ";
+        t = t->next;
+    } while (t != a);
+    cout << "\n";
+
+    // Free the circular list
+    b->next = nullptr;
+    while (a) { Node* d = a; a = a->next; delete d; }
+    return 0;
+}
+// Output: 10 20 30
+// Traversal: O(n); insertion at known tail: O(1)
+
+============================================================
+END OF LABSHEET 4
+============================================================
